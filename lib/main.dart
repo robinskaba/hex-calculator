@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import "dart:developer" as devtools show log;
 
-import 'package:hex_calculator/model/calculator/calculator.dart';
+import 'package:hex_calculator/model/calculator/evaluate_expression.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,12 +12,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String expression = "1*2";
-    // num value = evaluateExpression(expression);
-    devtools.log(
-      "Encapsulated $expression to ${encapsulatePriorityOperations(expression)}",
-    );
-
     return MaterialApp(
       title: 'Hex Calculator',
       theme: ThemeData(

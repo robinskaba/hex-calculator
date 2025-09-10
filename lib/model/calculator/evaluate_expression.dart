@@ -46,11 +46,14 @@ enum LoadingDirection { left, right }
 
 String _loadBuffer(String expression, int origin, LoadingDirection direction) {
   int sign = direction == LoadingDirection.right ? 1 : -1;
-  int i = origin != expression.length - 1 ? origin + sign : origin;
+
+  bool isOriginHex = _isHexCharacter(expression[origin]);
+  int i = isOriginHex ? origin : origin + sign;
 
   String buffer = "";
   while (i >= 0 && i < expression.length) {
     String character = expression[i];
+
     if (!_isHexCharacter(character)) break;
 
     if (direction == LoadingDirection.right) {
@@ -65,26 +68,25 @@ String _loadBuffer(String expression, int origin, LoadingDirection direction) {
   return buffer;
 }
 
-String convertToBase10Expression(String expression) {
+String _convertToBase10Expression(String expression) {
   for (var i = 0; i < expression.length; i++) {
     String character = expression[i];
-    bool isOperator = _isOperator(character);
-    if (!isOperator && i != expression.length - 1) continue;
+    if (_isHexCharacter(character) && i != expression.length - 1) continue;
 
-    print("before buffer");
     String buffer = _loadBuffer(expression, i, LoadingDirection.left);
+    if (buffer == "") continue;
+
     num base10Value = getBase10FromBase16(buffer);
     String base10ValueString = base10Value.toString();
 
-    print("after convert");
-    int rangeStart = i + 1 - buffer.length;
-    int rangeEnd = i != expression.length - 1 ? i - 1 : i;
+    int rangeStart = _isHexCharacter(character)
+        ? i - buffer.length + 1
+        : i - buffer.length;
+    int rangeEnd = _isHexCharacter(character) ? i + 1 : i;
 
     expression = expression.replaceRange(rangeStart, rangeEnd, base10ValueString);
     int lengthOffset = buffer.length - base10ValueString.length;
-    i -= lengthOffset + 1;
-
-    print("Expression $expression, i: $i");
+    i -= lengthOffset;
   }
 
   return expression;
