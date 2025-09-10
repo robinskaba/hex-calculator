@@ -74,19 +74,6 @@ num _evaluateSimpleExpression(String expression) {
   return value;
 }
 
-// String simplifyExpression(String expression) {
-//   int openingBracketIndex = expression.indexOf("(");
-//   if (openingBracketIndex == -1) return expression;
-
-//   int closingBracketIndex = expression.lastIndexOf(")");
-//   if (closingBracketIndex == -1) throw InvalidExpressionException();
-
-//   String bracketsContent = expression.substring(openingBracketIndex + 1, closingBracketIndex);
-//   String simplifiedExpression = expression.replaceFirst("($bracketsContent)", bracketsContent); // basically just removing the brackets this is retarded
-
-//   return simplifyExpression(simplifiedExpression);
-// }
-
 String encapsulatePriorityOperations(String expression) {
   int? firstArgumentStartingIndex;
   int? operatorIndex;

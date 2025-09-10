@@ -5,3 +5,5 @@ class InvalidHexNumberException implements Exception {}
 class InvalidExpressionException implements Exception {}
 
 class SimpleExpressionIsNotSimpleException implements Exception {}
+
+class LoadingBufferBeganAtBracketException implements Exception {}
