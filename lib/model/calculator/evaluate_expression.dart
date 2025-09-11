@@ -1,5 +1,6 @@
 import "dart:developer" as devtools show log;
 import 'dart:developer';
+import 'dart:math';
 import 'package:hex_calculator/model/calculator/calculator_exceptions.dart';
 import 'package:hex_calculator/model/calculator/hex_conversion.dart';
 
@@ -92,17 +93,56 @@ String _convertToBase10Expression(String expression) {
   return expression;
 }
 
-// String evaluateExpression(String expression) {
-//   num value = 0;
+num _evaluateBase10Expression(String expression) {
+  devtools.log("Received expression in Base10: $expression");
 
-//   while (expression.contains("(")) {
-//     String bracketsContent = expression.substring(
-//       expression.indexOf("(") + 1,
-//       expression.lastIndexOf(")"),
-//     );
+  num value = 0;
 
-//     value += evaluateExpression(bracketsContent);
-//     expression.replaceAll("($bracketsContent)", value.toString());
-//   }
+  while (expression.contains("(")) {
+    String bracketsContent = expression.substring(
+      expression.indexOf("(") + 1,
+      expression.lastIndexOf(")"),
+    );
 
-// }
+    num bracketsValue = _evaluateBase10Expression(bracketsContent);
+    expression.replaceAll("($bracketsContent)", bracketsValue.toString());
+  }
+
+  devtools.log("Expression after solving brackets: $expression");
+
+  const prioritizedOperators = ["*", "/", "+", "-"];
+  for (String operatorSymbol in prioritizedOperators) {
+    while (expression.contains(operatorSymbol)) {
+      int operatorIndex = expression.indexOf(operatorSymbol);
+      if (operatorIndex == 0 && operatorSymbol == "-") {
+        if (expression.lastIndexOf(operatorSymbol) == operatorIndex)
+          break; // only one "-" remains
+      }
+
+      String leftBuffer = _loadBuffer(expression, operatorIndex, LoadingDirection.left);
+      String rightBuffer = _loadBuffer(expression, operatorIndex, LoadingDirection.right);
+      num totalValue = _performOperation(
+        num.parse(leftBuffer),
+        _operations[operatorSymbol],
+        num.parse(rightBuffer),
+      );
+
+      expression = expression.replaceFirst(
+        "$leftBuffer$operatorSymbol$rightBuffer",
+        totalValue.toString(),
+      );
+    }
+  }
+
+  devtools.log("Expression after performing operations: $expression");
+
+  value = num.parse(expression);
+
+  return value;
+}
+
+num evaluateBase16Expression(String expression) {
+  String base10Expression = _convertToBase10Expression(expression);
+  // TODO convert back to base 6
+  return _evaluateBase10Expression(base10Expression);
+}

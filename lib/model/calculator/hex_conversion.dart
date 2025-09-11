@@ -59,3 +59,44 @@ num getBase10FromBase16(String base16Number) {
 
   return total;
 }
+
+String getBase16FromBase10(num base10Number) {
+  String getSingleHexCharacter(num simpleNumber) {
+    String hexCharacter = simpleNumber.toString();
+    hexCharacter = hexCharacter.length == 1 ? hexCharacter : ["A", "B", "C", "D", "E", "F"][(hexCharacter as int) - 10];
+    return hexCharacter;
+  }
+
+  String hexNumber = "";
+  int wholePart = base10Number.floor();
+  num decimalPart = base10Number - wholePart;
+
+  int wholeDivision = wholePart;
+  while (wholeDivision != 0) {
+    int remainder = wholeDivision % 16;
+    wholeDivision = (wholeDivision / 16).floor();
+
+    String hexCharacter = getSingleHexCharacter(remainder);
+    hexNumber = hexCharacter + hexNumber;
+  }
+
+  hexNumber = hexNumber != "" ? hexNumber : "0";
+
+  if (base10Number == wholePart) return hexNumber;
+
+  // decimal section
+  hexNumber += ".";
+  int precision = 0;
+  num fraction = decimalPart;
+  while (precision <= 21 && fraction != 0) {
+    num multiplied = fraction * 16;
+    int whole = multiplied.floor();
+    String hexCharacter = getSingleHexCharacter(whole);
+    hexNumber += hexCharacter;
+    fraction = multiplied - whole;
+
+    precision++;
+  }
+
+  return hexNumber;
+}
