@@ -1,10 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import "dart:developer" as devtools show log;
-
 import 'package:hex_calculator/model/calculator/evaluate_expression.dart';
-import 'package:hex_calculator/model/calculator/hex_conversion.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,13 +11,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // String expression = "8AB/B78";
-    // num value = evaluateBase16Expression(expression);
-    // devtools.log("$expression=$value");
-
-    num decimalNumber = 10.625;
-    String hex = getBase16FromBase10(decimalNumber);
-    devtools.log("$decimalNumber=$hex");
+    String expression = "8AB/B78";
+    String base16 = evaluateExpression(
+      expression: expression,
+      returnType: ExpressionType.base10,
+    );
+    String base10 = evaluateExpression(
+      expression: expression,
+      returnType: ExpressionType.base16,
+    );
+    devtools.log("$expression=$base16 ($base10)");
 
     return MaterialApp(
       title: 'Hex Calculator',

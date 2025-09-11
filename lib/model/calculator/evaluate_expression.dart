@@ -1,7 +1,3 @@
-import "dart:developer" as devtools show log;
-import 'dart:developer';
-import 'dart:math';
-import 'package:hex_calculator/model/calculator/calculator_exceptions.dart';
 import 'package:hex_calculator/model/calculator/hex_conversion.dart';
 
 enum Operation { addition, subtraction, multiplication, division }
@@ -13,24 +9,9 @@ const Map<String, Operation> _operations = {
   "*": Operation.multiplication,
 };
 
-bool _isHexCharacter(String character) {
-  return hexNumbers[character] != null || character == ".";
-}
-
-bool _isOperator(String character) {
-  return _operations[character] != null;
-}
-
-bool _isBracket(String character) {
-  return character == "(" || character == ")";
-}
-
 num _performOperation(num initialValue, Operation? operation, num bufferValue) {
   operation = operation ?? Operation.addition;
 
-  devtools.log(
-    "Performing operation of $operation: $initialValue $operation $bufferValue",
-  );
   switch (operation) {
     case Operation.addition:
       return initialValue + bufferValue;
@@ -43,21 +24,21 @@ num _performOperation(num initialValue, Operation? operation, num bufferValue) {
   }
 }
 
-enum LoadingDirection { left, right }
+enum _LoadingDirection { left, right }
 
-String _loadBuffer(String expression, int origin, LoadingDirection direction) {
-  int sign = direction == LoadingDirection.right ? 1 : -1;
+String _loadBuffer(String expression, int origin, _LoadingDirection direction) {
+  int sign = direction == _LoadingDirection.right ? 1 : -1;
 
-  bool isOriginHex = _isHexCharacter(expression[origin]);
+  bool isOriginHex = isPartOfAHexNumber(expression[origin]);
   int i = isOriginHex ? origin : origin + sign;
 
   String buffer = "";
   while (i >= 0 && i < expression.length) {
     String character = expression[i];
 
-    if (!_isHexCharacter(character)) break;
+    if (!isPartOfAHexNumber(character)) break;
 
-    if (direction == LoadingDirection.right) {
+    if (direction == _LoadingDirection.right) {
       buffer += character;
     } else {
       buffer = character + buffer;
@@ -72,18 +53,18 @@ String _loadBuffer(String expression, int origin, LoadingDirection direction) {
 String _convertToBase10Expression(String expression) {
   for (var i = 0; i < expression.length; i++) {
     String character = expression[i];
-    if (_isHexCharacter(character) && i != expression.length - 1) continue;
+    if (isPartOfAHexNumber(character) && i != expression.length - 1) continue;
 
-    String buffer = _loadBuffer(expression, i, LoadingDirection.left);
+    String buffer = _loadBuffer(expression, i, _LoadingDirection.left);
     if (buffer == "") continue;
 
     num base10Value = getBase10FromBase16(buffer);
     String base10ValueString = base10Value.toString();
 
-    int rangeStart = _isHexCharacter(character)
+    int rangeStart = isPartOfAHexNumber(character)
         ? i - buffer.length + 1
         : i - buffer.length;
-    int rangeEnd = _isHexCharacter(character) ? i + 1 : i;
+    int rangeEnd = isPartOfAHexNumber(character) ? i + 1 : i;
 
     expression = expression.replaceRange(rangeStart, rangeEnd, base10ValueString);
     int lengthOffset = buffer.length - base10ValueString.length;
@@ -94,8 +75,6 @@ String _convertToBase10Expression(String expression) {
 }
 
 num _evaluateBase10Expression(String expression) {
-  devtools.log("Received expression in Base10: $expression");
-
   num value = 0;
 
   while (expression.contains("(")) {
@@ -108,19 +87,22 @@ num _evaluateBase10Expression(String expression) {
     expression.replaceAll("($bracketsContent)", bracketsValue.toString());
   }
 
-  devtools.log("Expression after solving brackets: $expression");
-
   const prioritizedOperators = ["*", "/", "+", "-"];
   for (String operatorSymbol in prioritizedOperators) {
     while (expression.contains(operatorSymbol)) {
       int operatorIndex = expression.indexOf(operatorSymbol);
       if (operatorIndex == 0 && operatorSymbol == "-") {
-        if (expression.lastIndexOf(operatorSymbol) == operatorIndex)
+        if (expression.lastIndexOf(operatorSymbol) == operatorIndex) {
           break; // only one "-" remains
+        }
       }
 
-      String leftBuffer = _loadBuffer(expression, operatorIndex, LoadingDirection.left);
-      String rightBuffer = _loadBuffer(expression, operatorIndex, LoadingDirection.right);
+      String leftBuffer = _loadBuffer(expression, operatorIndex, _LoadingDirection.left);
+      String rightBuffer = _loadBuffer(
+        expression,
+        operatorIndex,
+        _LoadingDirection.right,
+      );
       num totalValue = _performOperation(
         num.parse(leftBuffer),
         _operations[operatorSymbol],
@@ -134,15 +116,28 @@ num _evaluateBase10Expression(String expression) {
     }
   }
 
-  devtools.log("Expression after performing operations: $expression");
-
   value = num.parse(expression);
 
   return value;
 }
 
-num evaluateBase16Expression(String expression) {
-  String base10Expression = _convertToBase10Expression(expression);
-  // TODO convert back to base 6
-  return _evaluateBase10Expression(base10Expression);
+enum ExpressionType { base10, base16 }
+
+String evaluateExpression({
+  required String expression,
+  ExpressionType expressionType = ExpressionType.base16,
+  ExpressionType returnType = ExpressionType.base16,
+  int precision = 21,
+}) {
+  String base10Expression = expressionType == ExpressionType.base10
+      ? expression
+      : _convertToBase10Expression(expression);
+  num base10Result = _evaluateBase10Expression(base10Expression);
+
+  switch (returnType) {
+    case ExpressionType.base10:
+      return base10Result.toStringAsPrecision(precision);
+    case ExpressionType.base16:
+      return getBase16FromBase10(base10Result, precision);
+  }
 }

@@ -1,29 +1,26 @@
 import 'dart:math';
-import 'package:hex_calculator/model/calculator/calculator_exceptions.dart';
+import 'package:hex_calculator/model/calculator/calculation_exceptions.dart';
 
-const Map<String, int> hexNumbers = {
-  "0": 0,
-  "1": 1,
-  "2": 2,
-  "3": 3,
-  "4": 4,
-  "5": 5,
-  "6": 6,
-  "7": 7,
-  "8": 8,
-  "9": 9,
-  "A": 10,
-  "B": 11,
-  "C": 12,
-  "D": 13,
-  "E": 14,
-  "F": 15,
-};
+const _hexLetters = ["A", "B", "C", "D", "E", "F"];
+
+bool isPartOfAHexNumber(String character) {
+  return _hexLetters.contains(character) || character == ".";
+}
 
 int getIntFromHexCharacter(String character) {
-  int? intValue = hexNumbers[character.toUpperCase()];
-  if (intValue == null) throw InvalidHexCharacterException();
-  return intValue;
+  int? fromCharacter = int.tryParse(character);
+  if (fromCharacter == null && !_hexLetters.contains(character)) {
+    throw InvalidHexCharacterException();
+  }
+  return fromCharacter ?? 10 + _hexLetters.indexOf(character);
+}
+
+String getHexCharacterFromInt(num simpleNumber) {
+  if (simpleNumber >= 16) throw CanNotConvertIntegerOver15ToHexCharacterException();
+  String hexCharacter = simpleNumber < 10
+      ? simpleNumber.toString()
+      : _hexLetters[(simpleNumber as int) - 10];
+  return hexCharacter;
 }
 
 num getBase10FromBase16(String base16Number) {
@@ -60,12 +57,11 @@ num getBase10FromBase16(String base16Number) {
   return total;
 }
 
-String getBase16FromBase10(num base10Number) {
-  String getSingleHexCharacter(num simpleNumber) {
-    String hexCharacter = simpleNumber.toString();
-    hexCharacter = hexCharacter.length == 1 ? hexCharacter : ["A", "B", "C", "D", "E", "F"][(hexCharacter as int) - 10];
-    return hexCharacter;
-  }
+String getBase16FromBase10(num base10Number, int precision) {
+  if (precision > 21) throw PrecisionShouldNotBeOver21Exception();
+
+  String sign = base10Number < 0 ? "-" : "";
+  base10Number = base10Number.abs();
 
   String hexNumber = "";
   int wholePart = base10Number.floor();
@@ -73,29 +69,34 @@ String getBase16FromBase10(num base10Number) {
 
   int wholeDivision = wholePart;
   while (wholeDivision != 0) {
+    bool isFinal = wholeDivision < 16;
+
     int remainder = wholeDivision % 16;
     wholeDivision = (wholeDivision / 16).floor();
 
-    String hexCharacter = getSingleHexCharacter(remainder);
+    String hexCharacter = getHexCharacterFromInt(remainder);
     hexNumber = hexCharacter + hexNumber;
+
+    if (isFinal) break;
   }
 
   hexNumber = hexNumber != "" ? hexNumber : "0";
+  hexNumber = sign + hexNumber;
 
   if (base10Number == wholePart) return hexNumber;
 
   // decimal section
   hexNumber += ".";
-  int precision = 0;
+  int decimalCounter = 0;
   num fraction = decimalPart;
-  while (precision <= 21 && fraction != 0) {
+  while (decimalCounter <= precision && fraction != 0) {
     num multiplied = fraction * 16;
     int whole = multiplied.floor();
-    String hexCharacter = getSingleHexCharacter(whole);
+    String hexCharacter = getHexCharacterFromInt(whole);
     hexNumber += hexCharacter;
     fraction = multiplied - whole;
 
-    precision++;
+    decimalCounter++;
   }
 
   return hexNumber;
