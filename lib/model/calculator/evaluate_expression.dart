@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:hex_calculator/model/calculator/hex_conversion.dart';
 
 enum Operation { addition, subtraction, multiplication, division }
@@ -36,7 +38,10 @@ String _loadBuffer(String expression, int origin, _LoadingDirection direction) {
   while (i >= 0 && i < expression.length) {
     String character = expression[i];
 
-    if (!isPartOfAHexNumber(character)) break;
+    if (!isPartOfAHexNumber(character)) {
+      log("Character '$character' isn't part of a hex number -> breaking");
+      break;
+    }
 
     if (direction == _LoadingDirection.right) {
       buffer += character;
@@ -47,6 +52,7 @@ String _loadBuffer(String expression, int origin, _LoadingDirection direction) {
     i += sign;
   }
 
+  log("Buffer returning as <$buffer>");
   return buffer;
 }
 
@@ -84,7 +90,7 @@ num _evaluateBase10Expression(String expression) {
     );
 
     num bracketsValue = _evaluateBase10Expression(bracketsContent);
-    expression.replaceAll("($bracketsContent)", bracketsValue.toString());
+    expression = expression.replaceAll("($bracketsContent)", bracketsValue.toString());
   }
 
   const prioritizedOperators = ["*", "/", "+", "-"];
@@ -97,21 +103,28 @@ num _evaluateBase10Expression(String expression) {
         }
       }
 
+      log("Loading buffer in expression '$expression' from $operatorIndex");
       String leftBuffer = _loadBuffer(expression, operatorIndex, _LoadingDirection.left);
       String rightBuffer = _loadBuffer(
         expression,
         operatorIndex,
         _LoadingDirection.right,
       );
+      log("Buffers loaded as L<$leftBuffer> R<$rightBuffer>");
+
       num totalValue = _performOperation(
         num.parse(leftBuffer),
         _operations[operatorSymbol],
         num.parse(rightBuffer),
       );
 
+      log("Before replacing expression '$expression'");
       expression = expression.replaceFirst(
         "$leftBuffer$operatorSymbol$rightBuffer",
         totalValue.toString(),
+      );
+      log(
+        "Operation: '$operatorSymbol' was performed on $leftBuffer and $rightBuffer (after replacing expression '$expression')",
       );
     }
   }
@@ -125,8 +138,8 @@ enum ExpressionType { base10, base16 }
 
 String evaluateExpression({
   required String expression,
-  ExpressionType expressionType = ExpressionType.base16,
-  ExpressionType returnType = ExpressionType.base16,
+  required ExpressionType expressionType,
+  required ExpressionType returnType,
   int precision = 21,
 }) {
   String base10Expression = expressionType == ExpressionType.base10
@@ -140,4 +153,12 @@ String evaluateExpression({
     case ExpressionType.base16:
       return getBase16FromBase10(base10Result, precision);
   }
+}
+
+void test() {
+  String expression = "30.75-28.75";
+  int operatorIndex = expression.indexOf("-");
+  String leftBuffer = _loadBuffer(expression, operatorIndex, _LoadingDirection.left);
+  String rightBuffer = _loadBuffer(expression, operatorIndex, _LoadingDirection.right);
+  log("Test: L<$leftBuffer> R<$rightBuffer>");
 }

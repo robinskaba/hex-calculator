@@ -4,7 +4,9 @@ import 'package:hex_calculator/model/calculator/calculation_exceptions.dart';
 const _hexLetters = ["A", "B", "C", "D", "E", "F"];
 
 bool isPartOfAHexNumber(String character) {
-  return _hexLetters.contains(character) || character == ".";
+  return (character.length == 1 && int.tryParse(character) != null) ||
+      _hexLetters.contains(character) ||
+      character == ".";
 }
 
 int getIntFromHexCharacter(String character) {
