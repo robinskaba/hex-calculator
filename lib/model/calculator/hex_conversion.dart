@@ -60,7 +60,7 @@ num getBase10FromBase16(String base16Number) {
 }
 
 String getBase16FromBase10(num base10Number, int precision) {
-  if (precision > 21) throw PrecisionShouldNotBeOver21Exception();
+  if (precision > 20) throw PrecisionShouldNotBeOver20Exception();
 
   String sign = base10Number < 0 ? "-" : "";
   base10Number = base10Number.abs();
@@ -91,7 +91,7 @@ String getBase16FromBase10(num base10Number, int precision) {
   hexNumber += ".";
   int decimalCounter = 0;
   num fraction = decimalPart;
-  while (decimalCounter <= precision && fraction != 0) {
+  while (decimalCounter < precision && fraction != 0) {
     num multiplied = fraction * 16;
     int whole = multiplied.floor();
     String hexCharacter = getHexCharacterFromInt(whole);
