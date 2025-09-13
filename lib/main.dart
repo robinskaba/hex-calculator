@@ -1,4 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:hex_calculator/controller/calculator/calc_bloc.dart';
+import 'package:hex_calculator/controller/calculator/calc_state.dart';
 import 'package:hex_calculator/view/home_view.dart';
 
 void main() {
@@ -39,7 +42,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hex Calculator',
       theme: appTheme,
-      home: const HomeView(),
+      home: BlocProvider(create: (context) => CalcBloc(), child: const HomeView()),
       debugShowCheckedModeBanner: false,
     );
   }

@@ -1,7 +1,9 @@
-class InvalidHexCharacterException implements Exception {}
+class CalculationException implements Exception {}
 
-class InvalidHexNumberException implements Exception {}
+class InvalidHexCharacterException implements CalculationException {}
 
-class PrecisionShouldNotBeOver20Exception implements Exception {}
+class InvalidHexNumberException implements CalculationException {}
 
-class CanNotConvertIntegerOver15ToHexCharacterException implements Exception {}
+class PrecisionShouldNotBeOver20Exception implements CalculationException {}
+
+class CanNotConvertIntegerOver15ToHexCharacterException implements CalculationException {}
