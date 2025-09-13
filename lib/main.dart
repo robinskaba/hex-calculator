@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hex_calculator/view/home_view.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,25 +10,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Hex Calculator',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 0, 0, 0)),
-      ),
-      home: const MyHomePage(),
-    );
+    return MaterialApp(title: 'Hex Calculator', theme: myTheme, home: const HomeView());
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Placeholder();
-  }
-}
+final ThemeData myTheme = ThemeData(
+  brightness: Brightness.dark,
+  primaryColor: Colors.black,
+  scaffoldBackgroundColor: Colors.black,
+  colorScheme: ColorScheme.dark(primary: Colors.white, onPrimary: Colors.black),
+  textTheme: const TextTheme(
+    bodyLarge: TextStyle(color: Colors.white),
+    bodyMedium: TextStyle(color: Colors.white),
+    bodySmall: TextStyle(color: Colors.white),
+  ),
+  iconTheme: const IconThemeData(color: Colors.white),
+);
