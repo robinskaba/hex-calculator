@@ -55,26 +55,46 @@ class _HomeViewState extends State<HomeView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            Expanded(flex: 2, child: Container()),
             Expanded(
+              flex: 4,
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Align(
                   alignment: Alignment.topRight,
-                  child: Text("solution aaa", maxLines: 1, textAlign: TextAlign.right),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "AB5D+85CCC-45.223*2",
+                        maxLines: 1,
+                        textAlign: TextAlign.right,
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      SizedBox(height: 12),
+                      Text(
+                        "=ABCD",
+                        maxLines: 1,
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.secondary,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
 
-            Column(
-              children: [
-                GridView.count(
-                  crossAxisCount: 5,
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: buttons,
-                ),
-                TextButton(onPressed: () {}, child: Text("=")),
-              ],
+            Expanded(
+              flex: 6,
+              child: GridView.count(
+                crossAxisCount: 5,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: buttons,
+              ),
             ),
           ],
         ),

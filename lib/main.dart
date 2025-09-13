@@ -10,19 +10,37 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Hex Calculator', theme: myTheme, home: const HomeView());
+    final buttonTheme = ButtonThemeData(buttonColor: Colors.grey, hoverColor: Colors.red);
+
+    final appTheme = ThemeData(
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        shadowColor: Colors.black,
+        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
+      ),
+      colorScheme: ColorScheme(
+        brightness: Brightness.light,
+        primary: Colors.black,
+        onPrimary: Colors.white,
+        secondary: Colors.grey,
+        onSecondary: Colors.blueGrey,
+        error: Colors.red,
+        onError: Colors.black,
+        surface: Colors.white,
+        onSurface: Colors.black,
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(alignment: AlignmentGeometry.center),
+      ),
+      buttonTheme: buttonTheme,
+    );
+
+    return MaterialApp(
+      title: 'Hex Calculator',
+      theme: appTheme,
+      home: const HomeView(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }
-
-final ThemeData myTheme = ThemeData(
-  brightness: Brightness.dark,
-  primaryColor: Colors.black,
-  scaffoldBackgroundColor: Colors.black,
-  colorScheme: ColorScheme.dark(primary: Colors.white, onPrimary: Colors.black),
-  textTheme: const TextTheme(
-    bodyLarge: TextStyle(color: Colors.white),
-    bodyMedium: TextStyle(color: Colors.white),
-    bodySmall: TextStyle(color: Colors.white),
-  ),
-  iconTheme: const IconThemeData(color: Colors.white),
-);
