@@ -1,7 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hex_calculator/controller/calculator/calc_bloc.dart';
-import 'package:hex_calculator/controller/calculator/calc_state.dart';
 import 'package:hex_calculator/view/home_view.dart';
 
 void main() {

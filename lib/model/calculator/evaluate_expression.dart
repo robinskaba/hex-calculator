@@ -1,3 +1,4 @@
+import 'package:hex_calculator/model/calculator/calculation_exceptions.dart';
 import 'package:hex_calculator/model/calculator/hex_conversion.dart';
 
 enum Operation { addition, subtraction, multiplication, division }
@@ -80,6 +81,7 @@ num _evaluateBase10Expression(String expression) {
   num value = 0;
 
   while (expression.contains("(")) {
+    if (!expression.contains(")")) throw InvalidExpressionException();
     String bracketsContent = expression.substring(
       expression.indexOf("(") + 1,
       expression.lastIndexOf(")"),
@@ -139,7 +141,11 @@ String evaluateExpression({
 
   switch (returnType) {
     case ExpressionType.base10:
-      return base10Result.toStringAsFixed(fractionalPlaces);
+      String result = base10Result.toStringAsFixed(fractionalPlaces);
+      if (result.contains('.')) {
+        result = result.replaceFirst(RegExp(r'\.?0*$'), '');
+      }
+      return result;
     case ExpressionType.base16:
       return getBase16FromBase10(base10Result, fractionalPlaces);
   }
