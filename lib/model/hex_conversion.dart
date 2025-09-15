@@ -60,7 +60,7 @@ num getBase10FromBase16(String base16Number) {
 }
 
 String getBase16FromBase10(num base10Number, int precision) {
-  if (precision > 20) throw PrecisionShouldNotBeOver20Exception();
+  if (precision > 20) throw FractionalPlacesShouldNotBeOver20Exception();
 
   String sign = base10Number < 0 ? "-" : "";
   base10Number = base10Number.abs();

@@ -1,26 +1,26 @@
 import 'package:hex_calculator/model/calculation_exceptions.dart';
 import 'package:hex_calculator/model/hex_conversion.dart';
 
-enum Operation { addition, subtraction, multiplication, division }
+enum _Operation { addition, subtraction, multiplication, division }
 
-const Map<String, Operation> _operations = {
-  "+": Operation.addition,
-  "-": Operation.subtraction,
-  "/": Operation.division,
-  "*": Operation.multiplication,
+const Map<String, _Operation> _operations = {
+  "+": _Operation.addition,
+  "-": _Operation.subtraction,
+  "/": _Operation.division,
+  "*": _Operation.multiplication,
 };
 
-num _performOperation(num initialValue, Operation? operation, num bufferValue) {
-  operation = operation ?? Operation.addition;
+num _performOperation(num initialValue, _Operation? operation, num bufferValue) {
+  operation = operation ?? _Operation.addition;
 
   switch (operation) {
-    case Operation.addition:
+    case _Operation.addition:
       return initialValue + bufferValue;
-    case Operation.subtraction:
+    case _Operation.subtraction:
       return initialValue - bufferValue;
-    case Operation.multiplication:
+    case _Operation.multiplication:
       return initialValue * bufferValue;
-    case Operation.division:
+    case _Operation.division:
       return initialValue / bufferValue;
   }
 }
@@ -78,8 +78,6 @@ String _convertToBase10Expression(String expression) {
 }
 
 num _evaluateBase10Expression(String expression) {
-  num value = 0;
-
   while (expression.contains("(")) {
     if (!expression.contains(")")) throw InvalidExpressionException();
     String bracketsContent = expression.substring(
@@ -108,6 +106,8 @@ num _evaluateBase10Expression(String expression) {
         _LoadingDirection.right,
       );
 
+      if (rightBuffer == "") throw PostOperatorNumberMissingException();
+
       num totalValue = _performOperation(
         num.parse(leftBuffer),
         _operations[operatorSymbol],
@@ -121,9 +121,10 @@ num _evaluateBase10Expression(String expression) {
     }
   }
 
-  value = num.parse(expression);
+  num? parsedValue = num.tryParse(expression);
+  if (parsedValue == null) throw EmptyBracketException();
 
-  return value;
+  return parsedValue;
 }
 
 enum ExpressionType { base10, base16 }

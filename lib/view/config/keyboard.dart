@@ -13,7 +13,7 @@ final List<Symbol> keyboard = [
   WritingSymbol("("),
   WritingSymbol(")"),
   WritingSymbol("."),
-  Symbol("C", (_) => ""),
+  Symbol("AC", (_) => ""),
   Symbol("⌫", (String e) => e.length > 1 ? e.substring(0, e.length - 1) : ""),
 
   WritingSymbol("C"),

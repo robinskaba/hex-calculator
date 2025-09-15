@@ -46,8 +46,9 @@ class _CalculatorViewState extends State<CalculatorView> {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(flex: 2, child: Container()),
+                Expanded(flex: 1, child: Container()),
                 Expanded(
                   flex: 4,
                   child: Padding(
@@ -90,7 +91,7 @@ class _CalculatorViewState extends State<CalculatorView> {
                 ),
 
                 Expanded(
-                  flex: 8,
+                  flex: 6,
                   child: GridView.count(
                     crossAxisCount: 5,
                     shrinkWrap: true,
