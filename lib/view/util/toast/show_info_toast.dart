@@ -10,8 +10,8 @@ Future<void> showInfoToast({
     toastLength: Toast.LENGTH_SHORT,
     gravity: ToastGravity.BOTTOM,
     timeInSecForIosWeb: 1,
-    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-    textColor: Theme.of(context).colorScheme.onSecondaryContainer,
+    backgroundColor: Theme.of(context).colorScheme.surface,
+    textColor: Theme.of(context).colorScheme.primary,
     fontSize: 16.0,
   );
 }

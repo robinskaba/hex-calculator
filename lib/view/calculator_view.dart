@@ -39,6 +39,8 @@ class _CalculatorViewState extends State<CalculatorView> {
 
   @override
   Widget build(BuildContext context) {
+    const double keyboardButtonSpacing = 5;
+
     return BlocBuilder<CalcBloc, CalcState>(
       builder: (context, state) {
         return Scaffold(
@@ -48,7 +50,7 @@ class _CalculatorViewState extends State<CalculatorView> {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Flexible(child: Spacer()),
+                Spacer(),
                 Expanded(
                   flex: 1,
                   child: Padding(
@@ -62,7 +64,7 @@ class _CalculatorViewState extends State<CalculatorView> {
                             expression,
                             maxLines: 1,
                             textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.headlineMedium,
+                            style: Theme.of(context).textTheme.headlineLarge,
                           ),
                           SizedBox(height: 12),
                           Text(
@@ -81,7 +83,7 @@ class _CalculatorViewState extends State<CalculatorView> {
                             textAlign: TextAlign.right,
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.secondary,
-                              fontSize: 16,
+                              fontSize: 14,
                             ),
                           ),
                         ],
@@ -94,9 +96,15 @@ class _CalculatorViewState extends State<CalculatorView> {
                   flex: 3,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    spacing: keyboardButtonSpacing,
                     children: [
                       GridView.count(
                         crossAxisCount: 5,
+                        mainAxisSpacing: keyboardButtonSpacing,
+                        crossAxisSpacing: keyboardButtonSpacing,
+                        padding: EdgeInsets.all(0), // grid view has default padding
+                        childAspectRatio: 1,
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         children: buttons,

@@ -12,30 +12,44 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buttonTheme = ButtonThemeData(buttonColor: Colors.grey, hoverColor: Colors.red);
+    final isLight = true;
+
+    final ColorScheme colorSchemeLight = ColorScheme(
+      brightness: Brightness.light,
+      primary: Colors.black,
+      onPrimary: Colors.white,
+      secondary: const Color.fromARGB(255, 178, 178, 178),
+      onSecondary: const Color.fromARGB(255, 0, 0, 0),
+      error: Colors.red,
+      onError: Colors.black,
+      surface: Colors.white,
+      onSurface: Colors.black,
+    );
+
+    final ColorScheme colorSchemeDark = ColorScheme(
+      brightness: Brightness.dark,
+      primary: Colors.white,
+      onPrimary: Colors.black,
+      secondary: colorSchemeLight.secondary,
+      onSecondary: Colors.white,
+      error: colorSchemeLight.error,
+      onError: colorSchemeLight.onError,
+      surface: Colors.black,
+      onSurface: Colors.white,
+    );
+
+    final colorScheme = isLight ? colorSchemeLight : colorSchemeDark;
+    final textButtonTheme = TextButtonThemeData(
+      style: TextButton.styleFrom(
+        backgroundColor: colorScheme.secondary.withAlpha(100),
+        foregroundColor: colorScheme.onSecondary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+      ),
+    );
 
     final appTheme = ThemeData(
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.white,
-        elevation: 1,
-        shadowColor: Colors.black,
-        titleTextStyle: Theme.of(context).textTheme.headlineSmall,
-      ),
-      colorScheme: ColorScheme(
-        brightness: Brightness.light,
-        primary: Colors.black,
-        onPrimary: Colors.white,
-        secondary: Colors.grey,
-        onSecondary: Colors.blueGrey,
-        error: Colors.red,
-        onError: Colors.black,
-        surface: Colors.white,
-        onSurface: Colors.black,
-      ),
-      textButtonTheme: TextButtonThemeData(
-        style: ButtonStyle(alignment: AlignmentGeometry.center),
-      ),
-      buttonTheme: buttonTheme,
+      colorScheme: colorScheme,
+      textButtonTheme: textButtonTheme,
     );
 
     return MaterialApp(
