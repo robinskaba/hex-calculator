@@ -4,6 +4,7 @@ import 'package:hex_calculator/controller/calc_bloc.dart';
 import 'package:hex_calculator/controller/calc_event.dart';
 import 'package:hex_calculator/controller/calc_state.dart';
 import 'package:hex_calculator/view/config/keyboard.dart';
+import 'package:hex_calculator/view/util/toast/show_info_toast.dart';
 
 class CalculatorView extends StatefulWidget {
   const CalculatorView({super.key});
@@ -108,6 +109,9 @@ class _CalculatorViewState extends State<CalculatorView> {
                         if (state.solution != null) {
                           expression = state.solution!.base16;
                         }
+
+                        // demo
+                        showInfoToast(context: context, message: "Testing a message");
                       });
                     },
                     child: Text("="),
