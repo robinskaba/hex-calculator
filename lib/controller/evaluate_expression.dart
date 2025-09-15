@@ -1,5 +1,5 @@
-import 'package:hex_calculator/model/calculator/calculation_exceptions.dart';
-import 'package:hex_calculator/model/calculator/hex_conversion.dart';
+import 'package:hex_calculator/model/calculation_exceptions.dart';
+import 'package:hex_calculator/model/hex_conversion.dart';
 
 enum Operation { addition, subtraction, multiplication, division }
 

@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
-import 'package:hex_calculator/controller/calculator/calc_event.dart';
-import 'package:hex_calculator/controller/calculator/calc_state.dart';
-import 'package:hex_calculator/model/calculator/evaluate_expression.dart';
+import 'package:hex_calculator/controller/calc_event.dart';
+import 'package:hex_calculator/controller/calc_state.dart';
+import 'package:hex_calculator/controller/evaluate_expression.dart';
 
 class CalcBloc extends Bloc<CalcEvent, CalcState> {
   CalcBloc() : super(const CalcState()) {

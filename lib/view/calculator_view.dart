@@ -1,60 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:hex_calculator/controller/calculator/calc_bloc.dart';
-import 'package:hex_calculator/controller/calculator/calc_event.dart';
-import 'package:hex_calculator/controller/calculator/calc_state.dart';
+import 'package:hex_calculator/controller/calc_bloc.dart';
+import 'package:hex_calculator/controller/calc_event.dart';
+import 'package:hex_calculator/controller/calc_state.dart';
+import 'package:hex_calculator/view/config/keyboard.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class CalculatorView extends StatefulWidget {
+  const CalculatorView({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<CalculatorView> createState() => _CalculatorViewState();
 }
 
-class Symbol {
-  final String character;
-  final String Function(String) updateExpression;
-  const Symbol(this.character, this.updateExpression);
-}
-
-class WritingSymbol extends Symbol {
-  WritingSymbol(String character)
-    : super(character, (String expression) => expression + character);
-}
-
-final List<Symbol> keyboard = [
-  WritingSymbol("("),
-  WritingSymbol(")"),
-  WritingSymbol("."),
-  Symbol("C", (_) => ""),
-  Symbol("⌫", (String e) => e.length > 1 ? e.substring(0, e.length - 1) : ""),
-
-  WritingSymbol("C"),
-  WritingSymbol("D"),
-  WritingSymbol("E"),
-  WritingSymbol("F"),
-  WritingSymbol("+"),
-
-  WritingSymbol("8"),
-  WritingSymbol("9"),
-  WritingSymbol("A"),
-  WritingSymbol("B"),
-  WritingSymbol("-"),
-
-  WritingSymbol("4"),
-  WritingSymbol("5"),
-  WritingSymbol("6"),
-  WritingSymbol("7"),
-  WritingSymbol("*"),
-
-  WritingSymbol("0"),
-  WritingSymbol("1"),
-  WritingSymbol("2"),
-  WritingSymbol("3"),
-  WritingSymbol("/"),
-];
-
-class _HomeViewState extends State<HomeView> {
+class _CalculatorViewState extends State<CalculatorView> {
   List<TextButton> buttons = [];
 
   String expression = "";
@@ -74,6 +32,7 @@ class _HomeViewState extends State<HomeView> {
         ),
       );
     }
+
     super.initState();
   }
 

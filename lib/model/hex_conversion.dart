@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:hex_calculator/model/calculator/calculation_exceptions.dart';
+import 'package:hex_calculator/model/calculation_exceptions.dart';
 
 const _hexLetters = ["A", "B", "C", "D", "E", "F"];
 
