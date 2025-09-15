@@ -42,16 +42,15 @@ class _CalculatorViewState extends State<CalculatorView> {
     return BlocBuilder<CalcBloc, CalcState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: Text("Hex Calculator")),
           body: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(16.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(flex: 1, child: Container()),
+                Flexible(child: Spacer()),
                 Expanded(
-                  flex: 4,
+                  flex: 1,
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Align(
@@ -92,29 +91,30 @@ class _CalculatorViewState extends State<CalculatorView> {
                 ),
 
                 Expanded(
-                  flex: 6,
-                  child: GridView.count(
-                    crossAxisCount: 5,
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    children: buttons,
-                  ),
-                ),
+                  flex: 3,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GridView.count(
+                        crossAxisCount: 5,
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        children: buttons,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            if (state.solution != null) {
+                              expression = state.solution!.base16;
+                            }
 
-                Expanded(
-                  flex: 1,
-                  child: TextButton(
-                    onPressed: () {
-                      setState(() {
-                        if (state.solution != null) {
-                          expression = state.solution!.base16;
-                        }
-
-                        // demo
-                        showInfoToast(context: context, message: "Testing a message");
-                      });
-                    },
-                    child: Text("="),
+                            // demo
+                            showInfoToast(context: context, message: "Testing a message");
+                          });
+                        },
+                        child: Text("="),
+                      ),
+                    ],
                   ),
                 ),
               ],
