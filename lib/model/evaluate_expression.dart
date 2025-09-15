@@ -64,9 +64,7 @@ String _convertToBase10Expression(String expression) {
     num base10Value = getBase10FromBase16(buffer);
     String base10ValueString = base10Value.toString();
 
-    int rangeStart = isPartOfAHexNumber(character)
-        ? i - buffer.length + 1
-        : i - buffer.length;
+    int rangeStart = isPartOfAHexNumber(character) ? i - buffer.length + 1 : i - buffer.length;
     int rangeEnd = isPartOfAHexNumber(character) ? i + 1 : i;
 
     expression = expression.replaceRange(rangeStart, rangeEnd, base10ValueString);
@@ -80,10 +78,9 @@ String _convertToBase10Expression(String expression) {
 num _evaluateBase10Expression(String expression) {
   while (expression.contains("(")) {
     if (!expression.contains(")")) throw InvalidExpressionException();
-    String bracketsContent = expression.substring(
-      expression.indexOf("(") + 1,
-      expression.lastIndexOf(")"),
-    );
+    if (expression.indexOf(")") < expression.indexOf("(")) throw InvalidExpressionException();
+
+    String bracketsContent = expression.substring(expression.indexOf("(") + 1, expression.lastIndexOf(")"));
 
     num bracketsValue = _evaluateBase10Expression(bracketsContent);
     expression = expression.replaceAll("($bracketsContent)", bracketsValue.toString());
@@ -100,24 +97,13 @@ num _evaluateBase10Expression(String expression) {
       }
 
       String leftBuffer = _loadBuffer(expression, operatorIndex, _LoadingDirection.left);
-      String rightBuffer = _loadBuffer(
-        expression,
-        operatorIndex,
-        _LoadingDirection.right,
-      );
+      String rightBuffer = _loadBuffer(expression, operatorIndex, _LoadingDirection.right);
 
       if (rightBuffer == "") throw PostOperatorNumberMissingException();
 
-      num totalValue = _performOperation(
-        num.parse(leftBuffer),
-        _operations[operatorSymbol],
-        num.parse(rightBuffer),
-      );
+      num totalValue = _performOperation(num.parse(leftBuffer), _operations[operatorSymbol], num.parse(rightBuffer));
 
-      expression = expression.replaceFirst(
-        "$leftBuffer$operatorSymbol$rightBuffer",
-        totalValue.toString(),
-      );
+      expression = expression.replaceFirst("$leftBuffer$operatorSymbol$rightBuffer", totalValue.toString());
     }
   }
 
