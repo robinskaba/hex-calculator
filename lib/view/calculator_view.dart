@@ -1,10 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hex_calculator/controller/calc_bloc.dart';
 import 'package:hex_calculator/controller/calc_event.dart';
 import 'package:hex_calculator/controller/calc_state.dart';
 import 'package:hex_calculator/view/config/keyboard.dart';
+import 'package:hex_calculator/view/util/theme/dark_theme_notifier.dart';
 import 'package:hex_calculator/view/util/toast/show_info_toast.dart';
+import 'package:provider/provider.dart';
 
 class CalculatorView extends StatefulWidget {
   const CalculatorView({super.key});
@@ -44,6 +48,29 @@ class _CalculatorViewState extends State<CalculatorView> {
     return BlocBuilder<CalcBloc, CalcState>(
       builder: (context, state) {
         return Scaffold(
+          appBar: AppBar(
+            actionsPadding: EdgeInsets.all(8),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                  Provider.of<DarkThemeNotifier>(context).isDarkMode
+                      ? Icons.brightness_high
+                      : Icons.brightness_low,
+                ),
+                onPressed: () {
+                  bool setDarkMode =
+                      Provider.of<DarkThemeNotifier>(context, listen: false).isDarkMode
+                      ? false
+                      : true;
+                  Provider.of<DarkThemeNotifier>(
+                    context,
+                    listen: false,
+                  ).setDarkMode(setDarkMode);
+                  log("SetDarkMode: $setDarkMode");
+                },
+              ),
+            ],
+          ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
@@ -53,41 +80,38 @@ class _CalculatorViewState extends State<CalculatorView> {
                 Spacer(),
                 Expanded(
                   flex: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Align(
-                      alignment: Alignment.topRight,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            expression,
-                            maxLines: 1,
-                            textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.headlineLarge,
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          expression,
+                          maxLines: 1,
+                          textAlign: TextAlign.right,
+                          style: Theme.of(context).textTheme.headlineLarge,
+                        ),
+                        SizedBox(height: 12),
+                        Text(
+                          state.solution?.base16 ?? "...",
+                          maxLines: 1,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontSize: 20,
                           ),
-                          SizedBox(height: 12),
-                          Text(
-                            state.solution?.base16 ?? "...",
-                            maxLines: 1,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: 20,
-                            ),
+                        ),
+                        SizedBox(height: 12),
+                        Text(
+                          state.solution?.base10 ?? "...",
+                          maxLines: 1,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                            fontSize: 14,
                           ),
-                          SizedBox(height: 12),
-                          Text(
-                            state.solution?.base10 ?? "...",
-                            maxLines: 1,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.secondary,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

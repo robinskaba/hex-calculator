@@ -14,7 +14,6 @@ class Solution {
 class CalcState {
   final Solution? solution;
 
-
   const CalcState({this.solution});
 
   @override
