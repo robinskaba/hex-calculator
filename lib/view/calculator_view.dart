@@ -74,27 +74,36 @@ class _CalculatorViewState extends State<CalculatorView> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
+                        spacing: 12,
                         children: [
-                          Text(
-                            expression,
-                            maxLines: 1,
-                            textAlign: TextAlign.right,
-                            style: Theme.of(context).textTheme.headlineLarge,
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              expression,
+                              maxLines: 1,
+                              textAlign: TextAlign.right,
+                              style: Theme.of(context).textTheme.headlineLarge,
+                            ),
                           ),
-                          SizedBox(height: 12),
-                          Text(
-                            state.solution?.base16 ?? "...",
-                            maxLines: 1,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20),
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              state.solution?.base16 ?? "...",
+                              maxLines: 1,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20),
+                            ),
                           ),
-                          SizedBox(height: 12),
-                          Text(
-                            state.solution?.base10 ?? "...",
-                            maxLines: 1,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 14),
+                          FittedBox(
+                            fit: BoxFit.fitWidth,
+                            child: Text(
+                              state.solution?.base10 ?? "...",
+                              maxLines: 1,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 14),
+                            ),
                           ),
                         ],
                       ),
