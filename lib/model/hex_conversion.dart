@@ -2,9 +2,15 @@ import 'package:decimal/decimal.dart';
 import 'package:hex_calculator/model/calculation_exceptions.dart';
 
 const _hexLetters = ["A", "B", "C", "D", "E", "F"];
+const _scaleOnInfinitePrecision = 10;
+int get infiniteFractionPrecision => _scaleOnInfinitePrecision;
 
 Decimal _powDecimal(Decimal base, int exp) {
-  return exp >= 0 ? base.pow(exp).toDecimal() : (Decimal.one / base.pow(-exp).toDecimal()).toDecimal();
+  return exp >= 0
+      ? base.pow(exp).toDecimal(scaleOnInfinitePrecision: infiniteFractionPrecision)
+      : (Decimal.one / base.pow(-exp).toDecimal(scaleOnInfinitePrecision: infiniteFractionPrecision)).toDecimal(
+          scaleOnInfinitePrecision: infiniteFractionPrecision,
+        );
 }
 
 bool isPartOfAHexNumber(String character) {
@@ -75,7 +81,7 @@ String getBase16FromBase10(Decimal base10Number, int precision) {
     bool isFinal = wholeDivision < decimal16;
 
     int remainder = int.parse(wholeDivision.remainder(decimal16).floor().toString());
-    wholeDivision = (wholeDivision / decimal16).toDecimal();
+    wholeDivision = (wholeDivision / decimal16).toDecimal(scaleOnInfinitePrecision: infiniteFractionPrecision);
 
     String hexCharacter = getHexCharacterFromInt(remainder);
     hexNumber = hexCharacter + hexNumber;

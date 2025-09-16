@@ -24,7 +24,7 @@ Decimal _performOperation(Decimal initialValue, _Operation? operation, Decimal b
     case _Operation.multiplication:
       return initialValue * bufferValue;
     case _Operation.division:
-      return (initialValue / bufferValue).toDecimal();
+      return (initialValue / bufferValue).toDecimal(scaleOnInfinitePrecision: infiniteFractionPrecision);
   }
 }
 
