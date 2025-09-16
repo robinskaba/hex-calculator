@@ -1,32 +1,6 @@
-import 'dart:developer';
-
 import 'package:decimal/decimal.dart';
 import 'package:hex_calculator/model/calculation_exceptions.dart';
 import 'package:hex_calculator/model/hex_conversion.dart';
-
-int _countNestedBrackets(String expression) {
-  int count = 0;
-  for (var i = 0; i < expression.length; i++) {
-    String char = expression[i];
-    if (char == "(") count++;
-    if (char == ")") break;
-  }
-
-  return count;
-}
-
-extension ExpressionLookUpHelper on String {
-  int indexOfNth(String character, int n) {
-    int skipped = 0;
-    for (var i = 0; i < length; i++) {
-      if (character == this[i]) {
-        if (--skipped == 0) return i;
-      }
-    }
-
-    return -1;
-  }
-}
 
 enum _Operation { addition, subtraction, multiplication, division }
 
@@ -64,10 +38,7 @@ String _loadBuffer(String expression, int origin, _LoadingDirection direction) {
   while (i >= 0 && i < expression.length) {
     String character = expression[i];
 
-    if ((buffer != "" || character != "-") && !isPartOfAHexNumber(character)) {
-      log("Character $character not part of hex, '$expression'");
-      break;
-    }
+    if ((buffer != "" || character != "-") && !isPartOfAHexNumber(character)) break;
 
     if (direction == _LoadingDirection.right) {
       buffer += character;
@@ -107,6 +78,7 @@ Decimal _evaluateBase10Expression(String expression) {
   while (expression.contains("(")) {
     if (!expression.contains(")")) throw InvalidExpressionException();
 
+    // finding the closing bracket that corresponds to the first opening bracket in the expression
     int outerOpeningBracketIndex = expression.indexOf("(");
     int? outerClosingBracketIndex;
     int innerOpenBrackets = 0;
@@ -135,6 +107,8 @@ Decimal _evaluateBase10Expression(String expression) {
     Decimal bracketsValue = _evaluateBase10Expression(bracketsContent);
     expression = expression.replaceAll("($bracketsContent)", bracketsValue.toString());
   }
+
+  if (expression.contains(")")) throw InvalidExpressionException("Expression kept a closing bracket");
 
   const prioritizedOperators = ["*", "/", "+", "-"];
   for (String operatorSymbol in prioritizedOperators) {
