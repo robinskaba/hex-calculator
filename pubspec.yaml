@@ -19,6 +19,7 @@ dependencies:
   shared_preferences: ^2.5.3
   bloc_concurrency: ^0.3.0
   decimal: ^3.2.4
+  flutter_launcher_icons: ^0.14.4
 
 dev_dependencies:
   flutter_test:
