@@ -47,7 +47,7 @@ class _CalculatorViewState extends State<CalculatorView> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            actionsPadding: EdgeInsets.all(8),
+            // actionsPadding: EdgeInsets.all(8),
             actions: <Widget>[
               IconButton(
                 icon: Icon(
@@ -61,46 +61,49 @@ class _CalculatorViewState extends State<CalculatorView> {
             ],
           ),
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Spacer(),
                 Expanded(
-                  flex: 1,
+                  flex: 3,
                   child: Align(
                     alignment: Alignment.topRight,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          expression,
-                          maxLines: 1,
-                          textAlign: TextAlign.right,
-                          style: Theme.of(context).textTheme.headlineLarge,
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          state.solution?.base16 ?? "...",
-                          maxLines: 1,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20),
-                        ),
-                        SizedBox(height: 12),
-                        Text(
-                          state.solution?.base10 ?? "...",
-                          maxLines: 1,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 14),
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            expression,
+                            maxLines: 1,
+                            textAlign: TextAlign.right,
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                          SizedBox(height: 12),
+                          Text(
+                            state.solution?.base16 ?? "...",
+                            maxLines: 1,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20),
+                          ),
+                          SizedBox(height: 12),
+                          Text(
+                            state.solution?.base10 ?? "...",
+                            maxLines: 1,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 14),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
 
                 Expanded(
-                  flex: 3,
+                  flex: 6,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
