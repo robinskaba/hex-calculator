@@ -40,7 +40,7 @@ String _loadBuffer(String expression, int origin, _LoadingDirection direction) {
   while (i >= 0 && i < expression.length) {
     String character = expression[i];
 
-    if (!isPartOfAHexNumber(character)) {
+    if ((buffer != "" || character != "-") && !isPartOfAHexNumber(character)) {
       log("Character $character not part of hex, '$expression'");
       break;
     }
@@ -105,7 +105,11 @@ Decimal _evaluateBase10Expression(String expression) {
 
       if (rightBuffer == "") throw PostOperatorNumberMissingException();
 
-      Decimal totalValue = _performOperation(Decimal.parse(leftBuffer), _operations[operatorSymbol], Decimal.parse(rightBuffer));
+      Decimal totalValue = _performOperation(
+        Decimal.parse(leftBuffer),
+        _operations[operatorSymbol],
+        Decimal.parse(rightBuffer),
+      );
 
       expression = expression.replaceFirst("$leftBuffer$operatorSymbol$rightBuffer", totalValue.toString());
     }
