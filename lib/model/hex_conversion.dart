@@ -12,16 +12,14 @@ bool isPartOfAHexNumber(String character) {
 int getIntFromHexCharacter(String character) {
   int? fromCharacter = int.tryParse(character);
   if (fromCharacter == null && !_hexLetters.contains(character)) {
-    throw InvalidHexCharacterException();
+    throw NotAHexDigitException();
   }
   return fromCharacter ?? 10 + _hexLetters.indexOf(character);
 }
 
 String getHexCharacterFromInt(num simpleNumber) {
-  if (simpleNumber >= 16) throw CanNotConvertIntegerOver15ToHexCharacterException();
-  String hexCharacter = simpleNumber < 10
-      ? simpleNumber.toString()
-      : _hexLetters[(simpleNumber as int) - 10];
+  if (simpleNumber >= 16) throw NotAHexDigitException();
+  String hexCharacter = simpleNumber < 10 ? simpleNumber.toString() : _hexLetters[(simpleNumber as int) - 10];
   return hexCharacter;
 }
 
@@ -34,9 +32,7 @@ num getBase10FromBase16(String base16Number) {
   }
 
   final bool hasDecimalPlaces = indexOfDecimalDot != -1;
-  final int beforeDecimalPlaces = hasDecimalPlaces
-      ? indexOfDecimalDot
-      : base16Number.length;
+  final int beforeDecimalPlaces = hasDecimalPlaces ? indexOfDecimalDot : base16Number.length;
 
   int power = beforeDecimalPlaces - 1;
   for (var i = 0; i < base16Number.length; i++) {
@@ -46,7 +42,7 @@ num getBase10FromBase16(String base16Number) {
     late final int base10Number;
     try {
       base10Number = getIntFromHexCharacter(base16Character);
-    } on InvalidHexCharacterException {
+    } on NotAHexDigitException {
       throw InvalidHexNumberException();
     }
 
