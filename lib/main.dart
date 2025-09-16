@@ -6,7 +6,7 @@ import 'package:hex_calculator/view/config/themes.dart';
 import 'package:hex_calculator/view/util/theme/dark_theme_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-  
+
 void main() {
   runApp(const MyApp());
 }
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
               );
             }
           default:
-            return Container();
+            return Container(color: Colors.black);
         }
       },
     );
