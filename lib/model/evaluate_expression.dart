@@ -4,6 +4,30 @@ import 'package:decimal/decimal.dart';
 import 'package:hex_calculator/model/calculation_exceptions.dart';
 import 'package:hex_calculator/model/hex_conversion.dart';
 
+int _countNestedBrackets(String expression) {
+  int count = 0;
+  for (var i = 0; i < expression.length; i++) {
+    String char = expression[i];
+    if (char == "(") count++;
+    if (char == ")") break;
+  }
+
+  return count;
+}
+
+extension ExpressionLookUpHelper on String {
+  int indexOfNth(String character, int n) {
+    int skipped = 0;
+    for (var i = 0; i < length; i++) {
+      if (character == this[i]) {
+        if (--skipped == 0) return i;
+      }
+    }
+
+    return -1;
+  }
+}
+
 enum _Operation { addition, subtraction, multiplication, division }
 
 const Map<String, _Operation> _operations = {
@@ -82,9 +106,31 @@ String _convertToBase10Expression(String expression) {
 Decimal _evaluateBase10Expression(String expression) {
   while (expression.contains("(")) {
     if (!expression.contains(")")) throw InvalidExpressionException();
-    if (expression.indexOf(")") < expression.indexOf("(")) throw InvalidExpressionException();
 
-    String bracketsContent = expression.substring(expression.indexOf("(") + 1, expression.lastIndexOf(")"));
+    int outerOpeningBracketIndex = expression.indexOf("(");
+    int? outerClosingBracketIndex;
+    int innerOpenBrackets = 0;
+    for (var i = outerOpeningBracketIndex + 1; i <= expression.lastIndexOf(")"); i++) {
+      String char = expression[i];
+      if (char == ")") {
+        if (innerOpenBrackets == 0) {
+          outerClosingBracketIndex = i;
+          break;
+        } else {
+          innerOpenBrackets--;
+        }
+      } else if (char == "(") {
+        innerOpenBrackets++;
+      }
+    }
+
+    if (outerClosingBracketIndex == null) throw InvalidExpressionException("Failed to reach a closing outer bracket");
+
+    if (expression.contains(")") && (outerClosingBracketIndex < outerOpeningBracketIndex)) {
+      throw InvalidExpressionException("Invalid bracket placement in expression: '$expression'");
+    }
+
+    String bracketsContent = expression.substring(outerOpeningBracketIndex + 1, outerClosingBracketIndex);
 
     Decimal bracketsValue = _evaluateBase10Expression(bracketsContent);
     expression = expression.replaceAll("($bracketsContent)", bracketsValue.toString());
@@ -103,7 +149,9 @@ Decimal _evaluateBase10Expression(String expression) {
       String leftBuffer = _loadBuffer(expression, operatorIndex, _LoadingDirection.left);
       String rightBuffer = _loadBuffer(expression, operatorIndex, _LoadingDirection.right);
 
-      if (rightBuffer == "") throw PostOperatorNumberMissingException();
+      if (rightBuffer == "") {
+        throw PostOperatorNumberMissingException("Missing a number after '$operatorSymbol' in '$expression'");
+      }
 
       Decimal totalValue = _performOperation(
         Decimal.parse(leftBuffer),
@@ -129,6 +177,8 @@ String evaluateExpression({
   required ExpressionType returnType,
   int fractionalPlaces = 20,
 }) {
+  expression = expression.replaceAll(" ", "");
+
   String base10Expression = expressionType == ExpressionType.base10
       ? expression
       : _convertToBase10Expression(expression);
