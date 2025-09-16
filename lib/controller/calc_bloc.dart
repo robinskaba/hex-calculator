@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' show restartable;
+import 'package:decimal/decimal.dart';
 import 'package:hex_calculator/controller/calc_event.dart';
 import 'package:hex_calculator/controller/calc_state.dart';
 import 'package:hex_calculator/model/evaluate_expression.dart';
@@ -13,7 +15,7 @@ Future<Solution> _getSolution(String expression, int fractionalPlaces) {
     returnType: ExpressionType.base10,
     fractionalPlaces: fractionalPlaces,
   );
-  String hexSolution = getBase16FromBase10(num.parse(decimalSolution), fractionalPlaces);
+  String hexSolution = getBase16FromBase10(Decimal.parse(decimalSolution), fractionalPlaces);
   Solution solution = Solution(base16: hexSolution, base10: decimalSolution);
 
   return Future.value(solution);
@@ -38,10 +40,10 @@ class CalcBloc extends Bloc<CalcEvent, CalcState> {
           reason = "A calculation problem occurred.";
         } else {
           reason = "An unknown exception occurred.";
+          log(e.toString());
         }
         emit(CalcState(solution: null, issue: reason));
       }
-    }, transformer: restartable()
-    );
+    }, transformer: restartable());
   }
 }

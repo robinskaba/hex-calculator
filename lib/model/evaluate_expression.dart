@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:decimal/decimal.dart';
 import 'package:hex_calculator/model/calculation_exceptions.dart';
 import 'package:hex_calculator/model/hex_conversion.dart';
 
@@ -10,7 +13,7 @@ const Map<String, _Operation> _operations = {
   "*": _Operation.multiplication,
 };
 
-num _performOperation(num initialValue, _Operation? operation, num bufferValue) {
+Decimal _performOperation(Decimal initialValue, _Operation? operation, Decimal bufferValue) {
   operation = operation ?? _Operation.addition;
 
   switch (operation) {
@@ -21,7 +24,7 @@ num _performOperation(num initialValue, _Operation? operation, num bufferValue) 
     case _Operation.multiplication:
       return initialValue * bufferValue;
     case _Operation.division:
-      return initialValue / bufferValue;
+      return (initialValue / bufferValue).toDecimal();
   }
 }
 
@@ -38,6 +41,7 @@ String _loadBuffer(String expression, int origin, _LoadingDirection direction) {
     String character = expression[i];
 
     if (!isPartOfAHexNumber(character)) {
+      log("Character $character not part of hex, '$expression'");
       break;
     }
 
@@ -61,7 +65,7 @@ String _convertToBase10Expression(String expression) {
     String buffer = _loadBuffer(expression, i, _LoadingDirection.left);
     if (buffer == "") continue;
 
-    num base10Value = getBase10FromBase16(buffer);
+    Decimal base10Value = getBase10FromBase16(buffer);
     String base10ValueString = base10Value.toString();
 
     int rangeStart = isPartOfAHexNumber(character) ? i - buffer.length + 1 : i - buffer.length;
@@ -75,14 +79,14 @@ String _convertToBase10Expression(String expression) {
   return expression;
 }
 
-num _evaluateBase10Expression(String expression) {
+Decimal _evaluateBase10Expression(String expression) {
   while (expression.contains("(")) {
     if (!expression.contains(")")) throw InvalidExpressionException();
     if (expression.indexOf(")") < expression.indexOf("(")) throw InvalidExpressionException();
 
     String bracketsContent = expression.substring(expression.indexOf("(") + 1, expression.lastIndexOf(")"));
 
-    num bracketsValue = _evaluateBase10Expression(bracketsContent);
+    Decimal bracketsValue = _evaluateBase10Expression(bracketsContent);
     expression = expression.replaceAll("($bracketsContent)", bracketsValue.toString());
   }
 
@@ -101,13 +105,13 @@ num _evaluateBase10Expression(String expression) {
 
       if (rightBuffer == "") throw PostOperatorNumberMissingException();
 
-      num totalValue = _performOperation(num.parse(leftBuffer), _operations[operatorSymbol], num.parse(rightBuffer));
+      Decimal totalValue = _performOperation(Decimal.parse(leftBuffer), _operations[operatorSymbol], Decimal.parse(rightBuffer));
 
       expression = expression.replaceFirst("$leftBuffer$operatorSymbol$rightBuffer", totalValue.toString());
     }
   }
 
-  num? parsedValue = num.tryParse(expression);
+  Decimal? parsedValue = Decimal.tryParse(expression);
   if (parsedValue == null) throw EmptyBracketException();
 
   return parsedValue;
@@ -124,7 +128,7 @@ String evaluateExpression({
   String base10Expression = expressionType == ExpressionType.base10
       ? expression
       : _convertToBase10Expression(expression);
-  num base10Result = _evaluateBase10Expression(base10Expression);
+  Decimal base10Result = _evaluateBase10Expression(base10Expression);
 
   switch (returnType) {
     case ExpressionType.base10:

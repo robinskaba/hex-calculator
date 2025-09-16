@@ -1,7 +1,11 @@
-import 'dart:math';
+import 'package:decimal/decimal.dart';
 import 'package:hex_calculator/model/calculation_exceptions.dart';
 
 const _hexLetters = ["A", "B", "C", "D", "E", "F"];
+
+Decimal _powDecimal(Decimal base, int exp) {
+  return exp >= 0 ? base.pow(exp).toDecimal() : (Decimal.one / base.pow(-exp).toDecimal()).toDecimal();
+}
 
 bool isPartOfAHexNumber(String character) {
   return (character.length == 1 && int.tryParse(character) != null) ||
@@ -23,8 +27,8 @@ String getHexCharacterFromInt(num simpleNumber) {
   return hexCharacter;
 }
 
-num getBase10FromBase16(String base16Number) {
-  num total = 0;
+Decimal getBase10FromBase16(String base16Number) {
+  Decimal total = Decimal.fromInt(0);
 
   final int indexOfDecimalDot = base16Number.indexOf(".");
   if (indexOfDecimalDot != base16Number.lastIndexOf(".")) {
@@ -46,7 +50,7 @@ num getBase10FromBase16(String base16Number) {
       throw InvalidHexNumberException();
     }
 
-    num addition = base10Number * pow(16, power);
+    Decimal addition = Decimal.fromInt(base10Number) * _powDecimal(Decimal.fromInt(16), power);
     total += addition;
 
     power--;
@@ -55,22 +59,23 @@ num getBase10FromBase16(String base16Number) {
   return total;
 }
 
-String getBase16FromBase10(num base10Number, int precision) {
+String getBase16FromBase10(Decimal base10Number, int precision) {
   if (precision > 20) throw FractionalPlacesShouldNotBeOver20Exception();
 
-  String sign = base10Number < 0 ? "-" : "";
+  String sign = base10Number.sign == -1 ? "-" : "";
   base10Number = base10Number.abs();
 
   String hexNumber = "";
-  int wholePart = base10Number.floor();
-  num decimalPart = base10Number - wholePart;
+  Decimal wholePart = base10Number.floor();
+  Decimal decimalPart = base10Number - wholePart;
 
-  int wholeDivision = wholePart;
-  while (wholeDivision != 0) {
-    bool isFinal = wholeDivision < 16;
+  Decimal wholeDivision = wholePart;
+  final Decimal decimal16 = Decimal.fromInt(16);
+  while (wholeDivision != Decimal.zero) {
+    bool isFinal = wholeDivision < decimal16;
 
-    int remainder = wholeDivision % 16;
-    wholeDivision = (wholeDivision / 16).floor();
+    int remainder = int.parse(wholeDivision.remainder(decimal16).floor().toString());
+    wholeDivision = (wholeDivision / decimal16).toDecimal();
 
     String hexCharacter = getHexCharacterFromInt(remainder);
     hexNumber = hexCharacter + hexNumber;
@@ -86,11 +91,12 @@ String getBase16FromBase10(num base10Number, int precision) {
   // decimal section
   hexNumber += ".";
   int decimalCounter = 0;
-  num fraction = decimalPart;
-  while (decimalCounter < precision && fraction != 0) {
-    num multiplied = fraction * 16;
-    int whole = multiplied.floor();
-    String hexCharacter = getHexCharacterFromInt(whole);
+  Decimal fraction = decimalPart;
+  while (decimalCounter < precision && fraction != Decimal.zero) {
+    Decimal multiplied = fraction * decimal16;
+
+    Decimal whole = multiplied.floor();
+    String hexCharacter = getHexCharacterFromInt(int.parse(whole.toString()));
     hexNumber += hexCharacter;
     fraction = multiplied - whole;
 
