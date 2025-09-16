@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
               );
             }
           default:
-            return Placeholder();
+            return Container();
         }
       },
     );
@@ -43,7 +43,7 @@ class HexCalculatorApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hex Calculator',
       themeMode: ThemeMode.system,
-      darkTheme: setDarkTheme,
+      // darkTheme: setDarkTheme, // seems to force dark mode
       theme: Provider.of<DarkThemeNotifier>(context).isDarkMode ? setDarkTheme : setLightTheme,
       home: BlocProvider(create: (context) => CalcBloc(), child: const CalculatorView()),
       debugShowCheckedModeBanner: false,
