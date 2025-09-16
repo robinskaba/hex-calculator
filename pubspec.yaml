@@ -39,6 +39,7 @@ dependencies:
   fluttertoast: ^8.2.12
   provider: ^6.1.5+1
   shared_preferences: ^2.5.3
+  bloc_concurrency: ^0.3.0
 
 dev_dependencies:
   flutter_test:

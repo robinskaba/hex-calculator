@@ -51,19 +51,11 @@ class _CalculatorViewState extends State<CalculatorView> {
             actions: <Widget>[
               IconButton(
                 icon: Icon(
-                  Provider.of<DarkThemeNotifier>(context).isDarkMode
-                      ? Icons.brightness_high
-                      : Icons.brightness_low,
+                  Provider.of<DarkThemeNotifier>(context).isDarkMode ? Icons.brightness_high : Icons.brightness_low,
                 ),
                 onPressed: () {
-                  bool setDarkMode =
-                      Provider.of<DarkThemeNotifier>(context, listen: false).isDarkMode
-                      ? false
-                      : true;
-                  Provider.of<DarkThemeNotifier>(
-                    context,
-                    listen: false,
-                  ).setDarkMode(setDarkMode);
+                  bool setDarkMode = Provider.of<DarkThemeNotifier>(context, listen: false).isDarkMode ? false : true;
+                  Provider.of<DarkThemeNotifier>(context, listen: false).setDarkMode(setDarkMode);
                 },
               ),
             ],
@@ -93,20 +85,14 @@ class _CalculatorViewState extends State<CalculatorView> {
                           state.solution?.base16 ?? "...",
                           maxLines: 1,
                           textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontSize: 20,
-                          ),
+                          style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20),
                         ),
                         SizedBox(height: 12),
                         Text(
                           state.solution?.base10 ?? "...",
                           maxLines: 1,
                           textAlign: TextAlign.right,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.secondary,
-                            fontSize: 14,
-                          ),
+                          style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 14),
                         ),
                       ],
                     ),
@@ -135,10 +121,9 @@ class _CalculatorViewState extends State<CalculatorView> {
                           setState(() {
                             if (state.solution != null) {
                               expression = state.solution!.base16;
+                            } else {
+                              showInfoToast(context: context, message: state.issue!);
                             }
-
-                            // demo
-                            showInfoToast(context: context, message: "Testing a message");
                           });
                         },
                         child: Text("="),

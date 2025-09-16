@@ -13,8 +13,9 @@ class Solution {
 
 class CalcState {
   final Solution? solution;
+  final String? issue;
 
-  const CalcState({this.solution});
+  const CalcState({this.solution, this.issue});
 
   @override
   operator ==(covariant CalcState other) => solution == other.solution;
