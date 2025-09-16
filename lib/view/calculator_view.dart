@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hex_calculator/controller/calc_bloc.dart';
@@ -66,7 +64,6 @@ class _CalculatorViewState extends State<CalculatorView> {
                     context,
                     listen: false,
                   ).setDarkMode(setDarkMode);
-                  log("SetDarkMode: $setDarkMode");
                 },
               ),
             ],

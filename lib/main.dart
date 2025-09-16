@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hex_calculator/controller/calc_bloc.dart';
@@ -21,16 +19,17 @@ class MyApp extends StatelessWidget {
     return FutureBuilder<SharedPreferences>(
       future: SharedPreferences.getInstance(),
       builder: (BuildContext context, AsyncSnapshot<SharedPreferences> asyncSnapshot) {
-        log(
-          "In FutureBuilder shared preferences are: ${asyncSnapshot.data}, connectionState: ${asyncSnapshot.connectionState}",
-        );
-        if (asyncSnapshot.data == null) {
-          log(asyncSnapshot.error?.toString() ?? "no error occurred");
+        switch (asyncSnapshot.connectionState) {
+          case ConnectionState.done:
+            {
+              return ChangeNotifierProvider<DarkThemeNotifier>.value(
+                value: DarkThemeNotifier(asyncSnapshot.data),
+                child: HexCalculatorApp(),
+              );
+            }
+          default:
+            return Placeholder();
         }
-        return ChangeNotifierProvider<DarkThemeNotifier>.value(
-          value: DarkThemeNotifier(asyncSnapshot.data),
-          child: HexCalculatorApp(),
-        );
       },
     );
   }
@@ -45,9 +44,7 @@ class HexCalculatorApp extends StatelessWidget {
       title: 'Hex Calculator',
       themeMode: ThemeMode.system,
       darkTheme: setDarkTheme,
-      theme: Provider.of<DarkThemeNotifier>(context).isDarkMode
-          ? setDarkTheme
-          : setLightTheme,
+      theme: Provider.of<DarkThemeNotifier>(context).isDarkMode ? setDarkTheme : setLightTheme,
       home: BlocProvider(create: (context) => CalcBloc(), child: const CalculatorView()),
       debugShowCheckedModeBanner: false,
     );
