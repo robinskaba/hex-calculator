@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart' show ChangeNotifier;
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' show restartable;
 import 'package:hex_calculator/controller/calc_event.dart';
