@@ -47,7 +47,6 @@ class _CalculatorViewState extends State<CalculatorView> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            // actionsPadding: EdgeInsets.all(8),
             actions: <Widget>[
               IconButton(
                 icon: Icon(
@@ -90,7 +89,7 @@ class _CalculatorViewState extends State<CalculatorView> {
                           FittedBox(
                             fit: BoxFit.fitWidth,
                             child: Text(
-                              state.solution?.base16 ?? "...",
+                              "0x${state.solution?.base16 ?? '...'}",
                               maxLines: 1,
                               textAlign: TextAlign.right,
                               style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 20),
@@ -99,7 +98,7 @@ class _CalculatorViewState extends State<CalculatorView> {
                           FittedBox(
                             fit: BoxFit.fitWidth,
                             child: Text(
-                              state.solution?.base10 ?? "...",
+                              "0b${state.solution?.base10 ?? '...'}",
                               maxLines: 1,
                               textAlign: TextAlign.right,
                               style: TextStyle(color: Theme.of(context).colorScheme.secondary, fontSize: 14),
