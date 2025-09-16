@@ -3,6 +3,10 @@ dev_dependencies:
 
 flutter_launcher_icons:
   image_path: "assets/icon/icon-dark.png"
+  adaptive_icon_background: "#000000"
+  adaptive_icon_foreground: "assets/icon/smallest-icon-foreground.png"
+  adaptive_icon_foreground_inset: 24
+
   android: "launcher_icon"
   min_sdk_android: 21 # android min sdk min:16, default 21
   ios: true
