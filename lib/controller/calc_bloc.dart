@@ -24,7 +24,6 @@ class CalcBloc extends Bloc<CalcEvent, CalcState> {
   CalcBloc() : super(const CalcState()) {
     on<CalcExpressionChanged>((event, emit) async {
       String expression = event.expression;
-      log("Received expression changed event to $expression");
 
       try {
         int fractionalPlaces = 5;

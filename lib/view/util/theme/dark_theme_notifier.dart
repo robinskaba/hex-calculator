@@ -12,9 +12,6 @@ class DarkThemeNotifier extends ChangeNotifier {
 
   void setDarkMode(bool val) {
     sharedPreferences?.setBool("isDarkMode", val);
-    log(
-      "SharedPreferences not null: ${sharedPreferences != null}, was setting to: $val, is: $isDarkMode",
-    );
     notifyListeners();
   }
 }
