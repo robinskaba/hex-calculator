@@ -2,7 +2,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hex_calculator/controller/calc_bloc.dart';
 import 'package:hex_calculator/view/calculator_view.dart';
+import 'package:hex_calculator/view/config/routes.dart';
 import 'package:hex_calculator/view/config/themes.dart';
+import 'package:hex_calculator/view/settings_view.dart';
 import 'package:hex_calculator/view/util/theme/dark_theme_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +48,9 @@ class HexCalculatorApp extends StatelessWidget {
       // darkTheme: setDarkTheme, // seems to force dark mode
       theme: Provider.of<DarkThemeNotifier>(context).isDarkMode ? setDarkTheme : setLightTheme,
       home: BlocProvider(create: (context) => CalcBloc(), child: const CalculatorView()),
+      // home: BlocProvider(create: (context) => CalcBloc(), child: const SettingsView()),
       debugShowCheckedModeBanner: false,
+      routes: {settingsRoute: (context) => SettingsView()},
     );
   }
 }

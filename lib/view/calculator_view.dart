@@ -4,6 +4,7 @@ import 'package:hex_calculator/controller/calc_bloc.dart';
 import 'package:hex_calculator/controller/calc_event.dart';
 import 'package:hex_calculator/controller/calc_state.dart';
 import 'package:hex_calculator/view/config/keyboard.dart';
+import 'package:hex_calculator/view/config/routes.dart';
 import 'package:hex_calculator/view/util/theme/dark_theme_notifier.dart';
 import 'package:hex_calculator/view/util/toast/show_info_toast.dart';
 import 'package:provider/provider.dart';
@@ -48,15 +49,23 @@ class _CalculatorViewState extends State<CalculatorView> {
         return Scaffold(
           appBar: AppBar(
             actions: <Widget>[
+              // IconButton(
+              //   icon: Icon(
+              //     Provider.of<DarkThemeNotifier>(context).isDarkMode ? Icons.brightness_high : Icons.brightness_low,
+              //   ),
+              //   onPressed: () {
+              //     bool setDarkMode = Provider.of<DarkThemeNotifier>(context, listen: false).isDarkMode ? false : true;
+              //     Provider.of<DarkThemeNotifier>(context, listen: false).setDarkMode(setDarkMode);
+              //   },
+              // ),
               IconButton(
                 icon: Icon(
-                  Provider.of<DarkThemeNotifier>(context).isDarkMode ? Icons.brightness_high : Icons.brightness_low,
+                  Icons.settings
                 ),
                 onPressed: () {
-                  bool setDarkMode = Provider.of<DarkThemeNotifier>(context, listen: false).isDarkMode ? false : true;
-                  Provider.of<DarkThemeNotifier>(context, listen: false).setDarkMode(setDarkMode);
-                },
-              ),
+                  Navigator.of(context).pushNamed(settingsRoute);
+                }
+              )
             ],
           ),
           body: Padding(
