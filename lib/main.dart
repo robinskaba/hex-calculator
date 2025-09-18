@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
               SettingsService().instantiate(prefs);
               
               return ChangeNotifierProvider<DarkThemeNotifier>.value(
-                value: DarkThemeNotifier(asyncSnapshot.data),
+                value: DarkThemeNotifier(),
                 child: HexCalculatorApp(),
               );
             }

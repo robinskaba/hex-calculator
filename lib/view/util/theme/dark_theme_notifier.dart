@@ -1,15 +1,13 @@
 import 'package:flutter/foundation.dart' show ChangeNotifier;
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hex_calculator/service/settings/settings_service.dart';
 
 class DarkThemeNotifier extends ChangeNotifier {
-  final SharedPreferences? sharedPreferences;
+  DarkThemeNotifier();
 
-  DarkThemeNotifier(this.sharedPreferences);
-
-  bool get isDarkMode => sharedPreferences?.getBool("isDarkMode") ?? false;
+  bool get isDarkMode => SettingsService().getIsDarkMode();
 
   void setDarkMode(bool val) {
-    sharedPreferences?.setBool("isDarkMode", val);
+    SettingsService().setIsDarkMode(val);
     notifyListeners();
   }
 }
