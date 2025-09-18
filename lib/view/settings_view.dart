@@ -1,6 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:hex_calculator/service/settings/settings_service.dart';
+import 'package:hex_calculator/view/util/theme/dark_theme_notifier.dart';
+import 'package:provider/provider.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({super.key});
@@ -15,6 +16,8 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   void initState() {
     fractionalPlacesController = TextEditingController();
+    fractionalPlacesController.text = SettingsService().getFractionalPlaces().toString();
+
     super.initState();
   }
 
@@ -27,7 +30,19 @@ class _SettingsViewState extends State<SettingsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Provider.of<DarkThemeNotifier>(context).isDarkMode ? Icons.brightness_high : Icons.brightness_low,
+            ),
+            onPressed: () {
+              bool setDarkMode = Provider.of<DarkThemeNotifier>(context, listen: false).isDarkMode ? false : true;
+              Provider.of<DarkThemeNotifier>(context, listen: false).setDarkMode(setDarkMode);
+            },
+          ),
+        ],
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -54,8 +69,11 @@ class _SettingsViewState extends State<SettingsView> {
                       contentPadding: EdgeInsets.symmetric(vertical: 4.0),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8.0), borderSide: BorderSide.none),
                     ),
-                    onChanged: (value) {
-                      log("Submitted: $value");
+                    onChanged: (value) async {
+                      int? places = int.tryParse(value);
+                      if (places != null && places >= 0 && places < 21) {
+                        await SettingsService().setFractionalPlaces(places);
+                      }
                     },
                   ),
                 ),

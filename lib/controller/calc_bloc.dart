@@ -7,6 +7,7 @@ import 'package:hex_calculator/controller/calc_state.dart';
 import 'package:hex_calculator/model/evaluate_expression.dart';
 import 'package:hex_calculator/model/calculation_exceptions.dart';
 import 'package:hex_calculator/model/hex_conversion.dart';
+import 'package:hex_calculator/service/settings/settings_service.dart';
 
 Future<Solution> _getSolution(String expression, int fractionalPlaces) {
   String decimalSolution = evaluateExpression(
@@ -26,8 +27,9 @@ class CalcBloc extends Bloc<CalcEvent, CalcState> {
     on<CalcExpressionChanged>((event, emit) async {
       String expression = event.expression;
 
+      int fractionalPlaces = SettingsService().getFractionalPlaces();
+
       try {
-        int fractionalPlaces = 5;
         Solution solution = await _getSolution(expression, fractionalPlaces);
         emit(CalcState(solution: solution));
       } catch (e) {

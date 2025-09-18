@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hex_calculator/controller/calc_bloc.dart';
+import 'package:hex_calculator/service/settings/settings_service.dart';
 import 'package:hex_calculator/view/calculator_view.dart';
 import 'package:hex_calculator/view/config/routes.dart';
 import 'package:hex_calculator/view/config/themes.dart';
@@ -24,6 +25,9 @@ class MyApp extends StatelessWidget {
         switch (asyncSnapshot.connectionState) {
           case ConnectionState.done:
             {
+              SharedPreferences? prefs = asyncSnapshot.data;
+              SettingsService().instantiate(prefs);
+              
               return ChangeNotifierProvider<DarkThemeNotifier>.value(
                 value: DarkThemeNotifier(asyncSnapshot.data),
                 child: HexCalculatorApp(),
