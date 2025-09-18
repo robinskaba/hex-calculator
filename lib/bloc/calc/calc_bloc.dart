@@ -2,12 +2,12 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart' show restartable;
 import 'package:decimal/decimal.dart';
-import 'package:hex_calculator/controller/calc_event.dart';
-import 'package:hex_calculator/controller/calc_state.dart';
+import 'package:hex_calculator/bloc/calc/calc_event.dart';
+import 'package:hex_calculator/bloc/calc/calc_state.dart';
 import 'package:hex_calculator/model/evaluate_expression.dart';
 import 'package:hex_calculator/model/calculation_exceptions.dart';
 import 'package:hex_calculator/model/hex_conversion.dart';
-import 'package:hex_calculator/service/settings/settings_service.dart';
+import 'package:hex_calculator/services/settings/settings_service.dart';
 
 Future<Solution> _getSolution(String expression, int fractionalPlaces) {
   String decimalSolution = evaluateExpression(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hex_calculator/service/settings/settings_service.dart';
+import 'package:hex_calculator/services/settings/settings_service.dart';
 import 'package:hex_calculator/view/util/theme/dark_theme_notifier.dart';
 import 'package:provider/provider.dart';
 

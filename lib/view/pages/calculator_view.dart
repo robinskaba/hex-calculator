@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:hex_calculator/controller/calc_bloc.dart';
-import 'package:hex_calculator/controller/calc_event.dart';
-import 'package:hex_calculator/controller/calc_state.dart';
+import 'package:hex_calculator/bloc/calc/calc_bloc.dart';
+import 'package:hex_calculator/bloc/calc/calc_event.dart';
+import 'package:hex_calculator/bloc/calc/calc_state.dart';
 import 'package:hex_calculator/view/config/keyboard.dart';
 import 'package:hex_calculator/view/config/routes.dart';
 import 'package:hex_calculator/view/util/toast/show_info_toast.dart';
