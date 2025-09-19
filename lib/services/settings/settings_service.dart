@@ -1,9 +1,7 @@
+import 'package:hex_calculator/model/settings/settings_keys.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsService {
-  static const _fractionalKey = "fractional_places";
-  static const _isDarkModeKey = "is_dark_mode";
-
   static final SettingsService _shared = SettingsService._sharedInstance();
   factory SettingsService() => _shared;
   SettingsService._sharedInstance();
@@ -15,18 +13,18 @@ class SettingsService {
   }
 
   Future<void> setFractionalPlaces(int places) async {
-    await _prefs?.setInt(_fractionalKey, places);
+    await _prefs?.setInt(SettingsKey.fractionalPlaces.key, places);
   }
 
   int getFractionalPlaces() {
-    return _prefs?.getInt(_fractionalKey) ?? 2;
+    return _prefs?.getInt(SettingsKey.fractionalPlaces.key) ?? 2;
   }
 
   Future<void> setIsDarkMode(bool value) async {
-    await _prefs?.setBool(_isDarkModeKey, value);
+    await _prefs?.setBool(SettingsKey.isDarkMode.key, value);
   }
 
   bool getIsDarkMode() {
-    return _prefs?.getBool(_isDarkModeKey) ?? false;
+    return _prefs?.getBool(SettingsKey.isDarkMode.key) ?? false;
   }
 }

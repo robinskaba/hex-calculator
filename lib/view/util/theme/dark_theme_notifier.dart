@@ -6,8 +6,7 @@ class DarkThemeNotifier extends ChangeNotifier {
 
   bool get isDarkMode => SettingsService().getIsDarkMode();
 
-  void setDarkMode(bool val) {
-    SettingsService().setIsDarkMode(val);
+  void refreshDarkMode() {
     notifyListeners();
   }
 }
