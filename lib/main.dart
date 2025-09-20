@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hex_calculator/bloc/calc/calc_bloc.dart';
 import 'package:hex_calculator/services/settings/settings_service.dart';
 import 'package:hex_calculator/view/pages/calculator_view.dart';
-import 'package:hex_calculator/view/config/routes.dart';
 import 'package:hex_calculator/view/config/themes.dart';
-import 'package:hex_calculator/view/pages/settings_view.dart';
 import 'package:hex_calculator/view/util/theme/dark_theme_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,7 +25,7 @@ class MyApp extends StatelessWidget {
             {
               SharedPreferences? prefs = asyncSnapshot.data;
               SettingsService().instantiate(prefs);
-              
+
               return ChangeNotifierProvider<DarkThemeNotifier>.value(
                 value: DarkThemeNotifier(),
                 child: HexCalculatorApp(),
@@ -54,7 +52,6 @@ class HexCalculatorApp extends StatelessWidget {
       home: BlocProvider(create: (context) => CalcBloc(), child: const CalculatorView()),
       // home: BlocProvider(create: (context) => CalcBloc(), child: const SettingsView()),
       debugShowCheckedModeBanner: false,
-      routes: {settingsRoute: (context) => SettingsView()},
     );
   }
 }

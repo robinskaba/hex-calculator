@@ -1,1 +1,0 @@
-const settingsRoute = "/settings";

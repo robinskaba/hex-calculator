@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:hex_calculator/bloc/calc/calc_bloc.dart';
 import 'package:hex_calculator/bloc/calc/calc_event.dart';
 import 'package:hex_calculator/bloc/calc/calc_state.dart';
+import 'package:hex_calculator/bloc/settings/settings_bloc.dart';
 import 'package:hex_calculator/view/config/keyboard.dart';
-import 'package:hex_calculator/view/config/routes.dart';
+import 'package:hex_calculator/view/pages/settings_view.dart';
 import 'package:hex_calculator/view/util/toast/show_info_toast.dart';
 
 class CalculatorView extends StatefulWidget {
@@ -50,7 +51,14 @@ class _CalculatorViewState extends State<CalculatorView> {
               IconButton(
                 icon: Icon(Icons.settings),
                 onPressed: () {
-                  Navigator.of(context).pushNamed(settingsRoute).then((_) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => BlocProvider(
+                        create: (_) => SettingsBloc(),
+                        child: const SettingsView()
+                      )
+                    )
+                  ).then((_) {
                     // recalculate solution on settings updated
                     if (!context.mounted) return;
                     context.read<CalcBloc>().add(CalcExpressionChanged(expression: expression));

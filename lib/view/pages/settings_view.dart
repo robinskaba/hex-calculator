@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hex_calculator/bloc/settings/settings_bloc.dart';
 import 'package:hex_calculator/bloc/settings/settings_event.dart';
 import 'package:hex_calculator/bloc/settings/settings_state.dart';
-import 'package:hex_calculator/services/settings/settings_service.dart';
 import 'package:hex_calculator/view/util/theme/dark_theme_notifier.dart';
 import 'package:hex_calculator/view/util/toast/show_info_toast.dart';
 import 'package:provider/provider.dart';
@@ -20,8 +19,10 @@ class _SettingsViewState extends State<SettingsView> {
 
   @override
   void initState() {
+    final currentValues = context.read<SettingsBloc>().state.currentValues;
+
     fractionalPlacesController = TextEditingController();
-    fractionalPlacesController.text = SettingsService().getFractionalPlaces().toString();
+    fractionalPlacesController.text = currentValues["fractional_places"] ?? "3";
 
     super.initState();
   }
