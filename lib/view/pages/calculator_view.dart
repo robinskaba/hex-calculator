@@ -51,18 +51,17 @@ class _CalculatorViewState extends State<CalculatorView> {
               IconButton(
                 icon: Icon(Icons.settings),
                 onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => BlocProvider(
-                        create: (_) => SettingsBloc(),
-                        child: const SettingsView()
+                  Navigator.of(context)
+                      .push(
+                        MaterialPageRoute(
+                          builder: (_) => BlocProvider(create: (_) => SettingsBloc(), child: const SettingsView()),
+                        ),
                       )
-                    )
-                  ).then((_) {
-                    // recalculate solution on settings updated
-                    if (!context.mounted) return;
-                    context.read<CalcBloc>().add(CalcExpressionChanged(expression: expression));
-                  });
+                      .then((_) {
+                        // recalculate solution on settings updated
+                        if (!context.mounted) return;
+                        context.read<CalcBloc>().add(CalcExpressionChanged(expression: expression));
+                      });
                 },
               ),
             ],
@@ -141,7 +140,13 @@ class _CalculatorViewState extends State<CalculatorView> {
                             if (state.solution != null) {
                               expression = state.solution!.base16;
                             } else {
-                              showInfoToast(context: context, message: state.issue!);
+                              if (state.issue != null) {
+                                showInfoToast(
+                                  context: context,
+                                  message: state.issue!,
+                                  toastPosition: ToastPosition.top,
+                                );
+                              }
                             }
                           });
                         },
